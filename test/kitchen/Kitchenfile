@@ -1,0 +1,19 @@
+# -*- mode: ruby -*-
+# # vi: set ft=ruby :
+
+cookbook "casserole" do
+    configuration "default"
+    configuration "repos"
+    configuration "packages"
+    configuration "configs"
+
+    # Fail immediately on a Foodcritic check and call ChefSpec before
+    # spending the time to spawn test servers
+    preflight_command <<-END.gsub(/^\s+/, "")
+        knife cookbook test -o .. casserole &&
+        foodcritic -f any . &&
+        rspec
+    END
+end
+
+# vim:et:fdm=marker:sts=4:sw=4:ts=4:
