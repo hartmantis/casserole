@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: casserole
-# Recipe:: default
+# Spec:: user_test
 #
 # Copyright 2012, Jonathan Hartman
 #
@@ -17,17 +17,15 @@
 # limitations under the License.
 #
 
-include_recipe "java"
-include_recipe "#{@cookbook_name}::user"
-include_recipe "#{@cookbook_name}::repos"
-include_recipe "#{@cookbook_name}::packages"
-include_recipe "#{@cookbook_name}::configs"
+require File.expand_path("../support/helpers.rb", __FILE__)
 
-([node["cassandra"]["name"]] + node["cassandra"]["extra_services"]).each do |s| 
-    service s do
-        supports :restart => true, :status => true
-        action [:enable, :start]
-    end 
+describe_recipe "casserole::user" do
+    include Helpers::Casserole
+
+    it "ensures the Cassandra user and group are created" do
+        user(node["cassandra"]["user"]).must_exist
+        group(node["cassandra"]["group"]).must_exist
+    end
 end
 
 # vim:et:fdm=marker:sts=4:sw=4:ts=4:

@@ -21,8 +21,16 @@
 normal["java"]["install_flavor"] = "oracle"
 normal["java"]["oracle"]["accept_oracle_download_terms"] = true
 
+default["cassandra"]["clustered"] = false
+default["cassandra"]["cluster_name"] = "Casserole Cluster"
+default["cassandra"]["data_bag"] = "cassandra_clusters"
+default["cassandra"]["node_id"] = node["fqdn"]
+default["cassandra"]["listen_address"] = node["ipaddress"]
+
 default["cassandra"]["name"] = "cassandra"
-default["cassandra"]["conf_dir"] = "/etc/cassandra"
+default["cassandra"]["user"] = "cassandra"
+default["cassandra"]["group"] = "cassandra"
+default["cassandra"]["home_dir"] = "/usr/share/cassandra"
 default["cassandra"]["extra_services"] = ["opscenterd"]
 default["cassandra"]["packages"] = {
     "python-cql" => {"version" => "1.0.10-1"},
@@ -36,10 +44,12 @@ when "rhel"
     ds_key = nil
     ds_components = nil
     default["cassandra"]["packages"].delete("python-cql")
+    default["cassandra"]["conf_dir"] = "/etc/cassandra/conf"
 when "debian"
     ds_url = "http://debian.datastax.com/community"
     ds_key = "http://debian.datastax.com/debian/repo_key"
     ds_components = ["stable", "main"]
+    default["cassandra"]["conf_dir"] = "/etc/cassandra"
 else
     raise Chef::Exceptions::UnsupportedAction,
         "Cookbook does not support #{node["platform"]} platform"

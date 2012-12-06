@@ -5,7 +5,13 @@ describe "casserole::default" do
 
     before(:each) do
         chef_run.node.automatic_attrs["platform_family"] = "rhel"
-        %w{java casserole::repos casserole::packages}.each do |r|
+        %w{
+            java
+            casserole::repos
+            casserole::packages
+            casserole::user
+            casserole::configs
+        }.each do |r|
             chef_run.node.run_state.seen_recipes[r] = true
         end
     end
@@ -19,8 +25,14 @@ describe "casserole::default" do
 
     it "should include the required recipes" do
         chef_run.converge "casserole::default"
-        chef_run.should include_recipe "casserole::repos"
-        chef_run.should include_recipe "casserole::packages"
+        %w{
+            casserole::repos
+            casserole::packages
+            casserole::user
+            casserole::configs
+        }.each do |r|
+            chef_run.should include_recipe r
+        end
     end
 end
 

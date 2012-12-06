@@ -24,8 +24,8 @@ describe_recipe "casserole::default" do
 
     it "installs the Sun Java 1.6 via the java cookbook" do
         o = %x{java -version 2>&1}.split("\n")
-        o[0].must_match(/^java version "1\.6.*$/)
-        o[1].must_match(/^Java\(TM\) SE Runtime Environment.*$/)
+        o[0].must_match /^java version "1\.6.*$/
+        o[1].must_match /^Java\(TM\) SE Runtime Environment.*$/
     end 
 
     it "enables and starts the appropriate services" do

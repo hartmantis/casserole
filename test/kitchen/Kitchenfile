@@ -3,6 +3,7 @@
 
 cookbook "casserole" do
     configuration "default"
+    configuration "user"
     configuration "repos"
     configuration "packages"
     configuration "configs"

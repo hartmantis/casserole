@@ -1,0 +1,58 @@
+{
+    "id": "cluster1",
+    "nodes": [
+        {
+            "id": "cassandra1.dc1.example.com",
+            "broadcast_address": "192.168.201.2",
+            "datacenter": "dc1",
+            "rack": "rack1",
+            "seed": true
+        },
+        {
+            "id": "cassandra2.dc1.example.com",
+            "broadcast_address": "192.168.201.3",
+            "datacenter": "dc1",
+            "rack": "rack1"
+        },
+        {
+            "id": "cassandra1.dc2.example.com",
+            "broadcast_address": "192.168.201.4",
+            "datacenter": "dc2",
+            "rack": "rack1",
+            "seed": true
+        },
+        {
+            "id": "cassandra2.dc2.example.com",
+            "broadcast_address": "192.168.201.5",
+            "datacenter": "dc2",
+            "rack": "rack1"
+        }
+    ],
+    "keyspaces": {
+        "potatoes": {
+            "replication_placement_strategy": "NetworkTopologyStrategy",
+            "replication_strategy_options": "dc1:1, dc2:1",
+            "columns": {
+                "types": {
+                    "russet": "good",
+                    "red": "better",
+                    "sweet": "best"
+                },
+                "origins": {
+                    "idaho": "yes",
+                    "dprk": "probably not"
+                }
+            }
+        },
+        "pants": {
+            "columns": {
+                "types": {
+                    "long": "good",
+                    "short": "better",
+                    "missing": "best"
+                }
+            }
+        }
+    },
+    "endpoint_snitch": "PropertyFileSnitch"
+}

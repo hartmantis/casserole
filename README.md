@@ -18,7 +18,9 @@ a few packagers of Apache Cassandra..
 Requirements
 ============
 
-RHEL/CentOS 5/6 or Ubuntu 10.04/12.04 (possibly other untested distros/vers)
+* RHEL/CentOS 5/6 or Ubuntu 10.04/12.04 (possibly other untested distros/vers)
+* For proper clustering `node["ipaddress"]` and `node["fqdn"]` Ohai attributes
+that will match what is fed in via the cluster's data bag item.
 
 Attributes
 ==========
@@ -30,11 +32,31 @@ deployment:
 
 Oracle Java seems to be the recommended for Cassandra, but OpenJDK would work
 
+    default["cassandra"]["clustered"] = false
+
+Is this node meant to be a part of a multi-node cluster?
+
+    default["cassandra"]["cluster_name"] = "Casserole Cluster"
+
+Name of the cluster of which the node is a member
+
+    default["cassandra"]["data_bag"] = "cassandra_clusters"
+
+The data bag to check for further info about a named multi-node cluster
+
+    default["cassandra"]["node_id"] = node["fqdn"]
+
+The name the node is identified by in the cluster's data bag item's nodes hash
+
+    default["cassandra"]["listen_address"] = node["ipaddress"]
+
+The IP address for the node to listen on
+
     default["cassandra"]["name"] = "cassandra"
 
 The name of the software, as used in the service definitions, etc
 
-    default["cassandra"]["conf_dir"] = "/etc/cassandra"
+    default["cassandra"]["conf_dir"] = "/etc/cassandra/conf"
 
 Cassandra's main configuration directory
 
@@ -109,6 +131,17 @@ To Do
 
 * Should every recipe really get its own Minitests? Test Kitchen runs would go
 much faster with only one configuration, e.g. everything in default.
-* Test Kitchen's integration\_tests are funky, can that do ChefSpec?
+* Test Kitchen's integration\_tests are funky, can they do ChefSpec so the
+preflight override isn't needed?
 * Functional tests are not yet integrated to ensure Cassandra is working. :(
-* CLUSTERING!!!
+* What happens to the tokens and distribution if a current cluster needs a node
+added?
+* Authentication support for Cassandra
+* SSL support for Gossip traffic
+* Authentication support for the Opscenter web UI
+* Support for IPv6
+* Is restarting Cassandra on template changes really acceptable?
+* The provided init script doesn't always restart properly
+* Kitchen tests for a clustered configuration
+* Find a more elegant way to handle the conf dirs (/etc/cassandra/conf in RHEL
+vs /etc/cassandra in Ubuntu)

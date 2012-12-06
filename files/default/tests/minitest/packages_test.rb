@@ -37,8 +37,9 @@ describe_recipe "casserole::packages" do
         %w{python2.7 python2.6 python}.each do |p|
             res = %x{which #{p}}
             $?.exitstatus == 0 and %x{#{p} -c "import cql"} == "" and
-                found_pycql = true
+                found_pycql = true and break
         end
+        found_pycql.must_equal true
     end
 
     it "installs the cqlsh shell client" do

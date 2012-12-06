@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: casserole
-# Recipe:: default
+# Cookbook Name:: casserole_test
+# Recipe:: user
 #
 # Copyright 2012, Jonathan Hartman
 #
@@ -17,17 +17,6 @@
 # limitations under the License.
 #
 
-include_recipe "java"
-include_recipe "#{@cookbook_name}::user"
-include_recipe "#{@cookbook_name}::repos"
-include_recipe "#{@cookbook_name}::packages"
-include_recipe "#{@cookbook_name}::configs"
-
-([node["cassandra"]["name"]] + node["cassandra"]["extra_services"]).each do |s| 
-    service s do
-        supports :restart => true, :status => true
-        action [:enable, :start]
-    end 
-end
+include_recipe "casserole::user"
 
 # vim:et:fdm=marker:sts=4:sw=4:ts=4:
