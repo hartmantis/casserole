@@ -157,3 +157,9 @@ calculating token IDs
 with Debian and RHEL, or do both really need to be maintained?
 * Ubuntu 12.04 runs out of memory using the base box's 384MB, may mess with
 being able to run Test Kitchen on Vagrant.
+* Tokens are being calculated wrong:
+
+    192.168.201.2   dc1         rack1       Up     Normal  20.39 KB        38.97%              57674485469197930195288808640163237968
+    192.168.201.3   dc1         rack1       Up     Normal  20.39 KB        3.81%               64162880367564825393354959677131675083
+    192.168.201.5   dc2         rack1       Up     Normal  20.39 KB        35.92%              125272177062940846191566045318489454887
+    192.168.201.4   dc2         rack1       Up     Normal  20.39 KB        21.30%              161518014361785232698955613784408936953

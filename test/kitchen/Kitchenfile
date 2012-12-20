@@ -12,8 +12,7 @@ cookbook "casserole" do
     # spending the time to spawn test servers
     preflight_command <<-END.gsub(/^\s+/, "")
         knife cookbook test -o .. casserole &&
-        tailor attributes/ &&
-        tailor . &&
+        tailor */*.rb &&
         foodcritic -f any . &&
         rspec
     END
