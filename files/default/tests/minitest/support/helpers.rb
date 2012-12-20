@@ -8,7 +8,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#   http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,11 +20,11 @@
 require "minitest/spec"
 
 module Helpers
-    module Casserole
-        include MiniTest::Chef::Assertions
-        include MiniTest::Chef::Context
-        include MiniTest::Chef::Resources
-    end 
+  module Casserole
+    include MiniTest::Chef::Assertions
+    include MiniTest::Chef::Context
+    include MiniTest::Chef::Resources
+  end 
 end
 
-# vim:et:fdm=marker:sts=4:sw=4:ts=4:
+# vim: ai et ts=2 sts=2 sw=2 ft=ruby fdm=marker

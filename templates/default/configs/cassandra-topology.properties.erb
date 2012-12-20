@@ -15,8 +15,9 @@
 # limitations under the License.
 
 # Cassandra Node IP=Data Center:Rack
-<% @nodes.sort_by {|a| [a["datacenter"], a["rack"]]}.each do |n| %>
-<%= n["broadcast_address"] %>=<%= n["datacenter"] %>:<%= n["rack"] %>
+<% @nodes.sort_by {|k, v| [v["datacenter"], v["rack"]]}.each do |k, v|
+# <%= k %>
+<%= v["broadcast_address"] %>=<%= v["datacenter"] %>:<%= v["rack"] %>
 <% end %>
 
 # default for unknown nodes

@@ -12,7 +12,6 @@ fi
 # use JNA if installed in standard location
 [ -r /usr/share/java/jna.jar ] && CLASSPATH="$CLASSPATH:/usr/share/java/jna.jar"
 
-
-for jar in <%= @home_dir %>/lib/*.jar; do
+for jar in <%= @home_dir %>/*.jar <%= @home_dir %>/lib/*.jar; do
     CLASSPATH=$CLASSPATH:$jar
 done

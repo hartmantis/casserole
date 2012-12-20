@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/RoboticCheese/casserole.png)](https://travis-ci.org/RoboticCheese/casserole])
+
 Description
 ===========
 
@@ -40,13 +42,14 @@ Is this node meant to be a part of a multi-node cluster?
 
 Name of the cluster of which the node is a member
 
-    default["cassandra"]["data_bag"] = "cassandra_clusters"
+    default["cassandra"]["data_bag"] = nil
 
-The data bag to check for further info about a named multi-node cluster
+Cluster information can be obtained from a central data bag instead of node
+attributes if a data bag name is set.
 
     default["cassandra"]["node_id"] = node["fqdn"]
 
-The name the node is identified by in the cluster's data bag item's nodes hash
+The unique name the node is identified by in the cluster's data bag item
 
     default["cassandra"]["listen_address"] = node["ipaddress"]
 
@@ -141,7 +144,16 @@ added?
 * Authentication support for the Opscenter web UI
 * Support for IPv6
 * Is restarting Cassandra on template changes really acceptable?
-* The provided init script doesn't always restart properly
 * Kitchen tests for a clustered configuration
 * Find a more elegant way to handle the conf dirs (/etc/cassandra/conf in RHEL
 vs /etc/cassandra in Ubuntu)
+* Use search instead of data\_bag\_item to determine cluster ID, use
+chef-solo-search to mock in test
+* Better exception checking for the items that are required to come from a
+data bag for a cluster
+* Better logging, particularly when setting the cluster attributes and
+calculating token IDs
+* Can the two init scripts be combined with enough logic to be compatible
+with Debian and RHEL, or do both really need to be maintained?
+* Ubuntu 12.04 runs out of memory using the base box's 384MB, may mess with
+being able to run Test Kitchen on Vagrant.

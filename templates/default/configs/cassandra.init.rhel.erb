@@ -1,0 +1,179 @@
+#!/bin/bash
+#
+# <%= @service_name %>
+#
+# Init script for Cassandra
+#
+# chkconfig: 2345 20 80
+# description: Runs Cassandra NOSQL database
+#
+
+# Author: Jon Hartman <j@p4nt5.com>
+
+. /etc/rc.d/init.d/functions
+
+export CASSANDRA_HOME=<%= @home_dir %>
+export CASSANDRA_INCLUDE=<%= @conf_dir %>/cassandra.in.sh
+export CASSANDRA_CONF=<%= @conf_dir %>
+export CASSANDRA_USER=<%= @user %>
+
+NAME=<%= @service_name %>
+PIDFILE=<%= @pid_file %>
+PROG=`which cassandra`
+
+is_running() {
+    (echo > /dev/tcp/localhost/9160) &> /dev/null
+    thrift=$?
+    (echo > /dev/tcp/localhost/7199) &> /dev/null
+    jmx=$?
+    [ -e $PIDFILE ]
+    pid=$?
+    [ $pid = 0 ] && [ -d /proc/`cat $PIDFILE` ]
+    proc=$?
+    [ $proc != 0 ] && \
+        [ -n "`pgrep -f org.apache.cassandra.thrift.CassandraDaemon`" ] && \
+        proc=0
+    [ $thrift = 0 ] && [ $jmx = 0 ] && [ $pid = 0 ] && [ $proc = 0 ] && \
+        return 0
+    [ $thrift != 0 ] && [ $jmx != 0 ] && [ $pid != 0 ] && [ $proc != 0 ] && \
+        return 3
+    # Thrift doesn't listen until post-bootstrap for new nodes
+    [ $thrift != 0 ] && [ $jmx = 0 ] && [ $pid = 0 ] && [ $proc = 0 ] && \
+        return 42
+    [ $thrift = 0 ] && [ $jmx = 0 ] && [ $pid != 0 ] && [ $proc = 0 ] && \
+        return 43
+    [ $proc != 0 ] && [ $pid = 0 ] && return 1
+    return 4
+}
+
+do_success() {
+    success
+    echo $1
+    exit 0
+}
+
+do_failure() {
+    failure
+    echo $1
+    exit 1
+}
+
+do_status() {
+    is_running
+    RET=$?
+    case $RET in
+        0)
+            echo "* $NAME is running"
+        ;;
+        1)
+            echo "* $NAME is not stopped, but PID file is present"
+        ;;
+        3)
+            echo "* $NAME is not stopped"
+        ;;
+        42)
+            echo "* $NAME is in the process of bootstrapping"
+            # Call a bootstrapping node running for init purposes
+            RET=0
+        ;;
+        43)
+            echo "* $NAME is running but PID file is missing"
+            # Edge case can be accounted for, so call it running
+            RET=0
+        ;;
+        *)
+            echo "* $NAME is in an unknown state"
+        ;;
+    esac
+    return $RET
+}
+
+do_start() {
+    ulimit -l unlimited
+    [ $? = 0 ] || do_failure "Ulimit call failed"
+    ulimit -n 100000
+    [ $? = 0 ] || do_failure "Ulimit call failed"
+
+    [ ! -d /var/lib/cassandra/data/system/LocationInfo ] && echo && \
+        echo "(starting up for the first time, may take a minute) " && \
+        newnode="true"
+
+    su $CASSANDRA_USER -c "$PROG -p $PIDFILE > /dev/null"
+    [ $? = 0 ] || do_failure "Failed to start Cassandra daemon"
+    # Give Cassandra a bit to start accepting traffic
+    for i in `seq 1 20`; do
+        is_running
+        ret=$?
+        [ $ret = 0 ] && return 0
+        sleep 0.5
+    done
+    # If it's a new node running but being bootstrapped, call it started
+    [ "$newnode" = "true" ] && [ $ret = 42 ] && return 0
+    # Otherwise, the start failed
+    do_failure "Failed to start Cassandra daemon within the time limit"
+}
+
+do_stop() {
+    [ -e $PIDFILE ] && killproc -p $PIDFILE || \
+        kill `pgrep -f org.apache.cassandra.thrift.CassandraDaemon`
+    for i in `seq 1 20`; do
+        is_running
+        [ $? = 3 ] && return 0
+        sleep 0.5
+    done
+    do_failure "Failed to stop Cassandra daemon"
+}
+
+
+for CHECK in $CASSANDRA_HOME $CASSANDRA_INCLUDE $CASSANDRA_CONF $PROG; do
+    [ -x $CHECK ] || do_failure "$CHECK not found"
+done
+
+[ -r /etc/sysconfig/$NAME ] && . /etc/sysconfig/$NAME
+[ -r /etc/default/$NAME ] && . /etc/default/$NAME
+
+if [ -z $JAVA_HOME ]; then
+    java=`which java 2> /dev/null`
+    if [ -n $java ]; then
+        java=`readlink --canonicalize "$java"`
+        export JAVA_HOME=`dirname \`dirname $java\``
+    else
+        for jdir in /usr/lib/jvm/jre /usr/lib/jvm/jre-1.6.* /usr/lib/jvm/java-1.6.*/jre; do
+            [ -x $jdir/bin/java ] && export JAVA_HOME=$jdir && break
+        done
+    fi
+fi
+
+[ -d $JAVA_HOME ] || do_failure "JAVA_HOME not found"
+
+export JAVA=$JAVA_HOME/bin/java
+
+case "$1" in
+    start)
+        echo -n "Starting $NAME... "
+        do_status > /dev/null && echo "Already running" && exit 0
+        do_start || do_failure
+        do_status > /dev/null || do_failure
+        do_success
+    ;;
+    stop)
+        echo -n "Stopping $NAME... "
+        do_status > /dev/null
+        [ $? != 0 ] && echo "Already stopped" && exit 0
+        do_stop || do_failure
+        do_status > /dev/null && do_failure
+        do_success
+        
+    ;;
+    status)
+        do_status
+        exit $?
+    ;;
+    restart)
+        $0 stop
+        $0 start
+    ;;
+    *)
+        echo "Usage: $0 {start|stop|restart|status}" && exit 1
+    ;;
+esac
