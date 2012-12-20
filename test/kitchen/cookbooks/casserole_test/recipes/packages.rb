@@ -19,4 +19,4 @@
 
 include_recipe "casserole::packages"
 
-# vim:et:fdm=marker:sts=4:sw=4:ts=4:
+# vim: ai et ts=2 sts=2 sw=2 ft=ruby fdm=marker
