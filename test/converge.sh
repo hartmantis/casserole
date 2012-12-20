@@ -5,7 +5,7 @@
 #
 
 install_chef() {
-    curl -L https://www.opscode.com/chef/install.sh | bash
+    gem install chef
 }
 
 build_solo_rb() {
