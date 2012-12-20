@@ -10,7 +10,7 @@ describe "casserole::configs" do
     @user = "cassandra"
     @group = "cassandra"
   end
-  
+
   context "test results that don't change between clustered and non" do
     before(:each) do
       chef_run.converge @rcp
@@ -24,10 +24,11 @@ describe "casserole::configs" do
 
     it "should create cassandra.in.sh" do
       f = "/etc/cassandra/conf/cassandra.in.sh"
-      [
+      strs = [
         "CASSANDRA_CONF=/etc/cassandra/conf",
         "for jar in /usr/share/cassandra/*.jar /usr/share/cassandra/lib/*.jar;"
-      ].each do |c|
+      ]
+      strs.each do |c|
         chef_run.should create_file_with_content(f, c)
       end
       chef_run.template(f).should be_owned_by(@user, @group)
@@ -55,14 +56,15 @@ describe "casserole::configs" do
 
     it "should create cassandra.yaml" do
       f = "/etc/cassandra/conf/cassandra.yaml"
-      [
+      strs = [
         "cluster_name: 'Casserole Cluster'",
         "initial_token: \n",
         "- seeds: \"127.0.0.1\"",
         "listen_address: 1.2.3.4",
         "broadcast_address: \n",
         "endpoint_snitch: SimpleSnitch"
-      ].each do |c|
+      ]
+      strs.each do |c|
         chef_run.should create_file_with_content(f, c)
       end
       chef_run.template(f).should be_owned_by(@user, @group)
@@ -80,10 +82,11 @@ describe "casserole::configs" do
 
     it "should create cassandra-topology.properties" do
       f = "/etc/cassandra/conf/cassandra-topology.properties"
-      [
+      strs = [
         "# Cassandra Node IP=Data Center:Rack\n\n# default for",
         "default=DC1:RAC1\n"
-      ].each do |c|
+      ]
+      strs.each do |c|
         chef_run.should create_file_with_content(f, c)
       end
       chef_run.template(f).should be_owned_by(@user, @group)
@@ -111,23 +114,23 @@ describe "casserole::configs" do
             "datacenter" => "dc1",
             "rack" => "rack1",
             "seed" => true
-          },  
+          },
           "cassandra2.dc1.example.com" => {
             "broadcast_address" => "192.168.201.3",
             "datacenter" => "dc1",
             "rack" => "rack1"
-          },  
+          },
           "cassandra1.dc2.example.com" => {
             "broadcast_address" => "192.168.201.4",
             "datacenter" => "dc2",
             "rack" => "rack1",
             "seed" => true
-          },  
+          },
           "cassandra2.dc2.example.com" => {
             "broadcast_address" => "192.168.201.5",
             "datacenter" => "dc2",
             "rack" => "rack1"
-          }   
+          }
         }
       }
       chef_run.converge @rcp
@@ -135,14 +138,15 @@ describe "casserole::configs" do
 
     it "should create cassandra.yaml" do
       f = "/etc/cassandra/conf/cassandra.yaml"
-      [
+      strs = [
         "cluster_name: 'cluster1'",
         "initial_token: 85070591730234615865843651857942052864",
         "- seeds: \"192.168.201.2,192.168.201.4\"",
         "listen_address: 4.3.2.1",
         "broadcast_address: 192.168.201.2",
         "endpoint_snitch: PropertyFileSnitch"
-      ].each do |c|
+      ]
+      strs.each do |c|
         chef_run.should create_file_with_content(f, c)
       end
       chef_run.template(f).should be_owned_by(@user, @group)

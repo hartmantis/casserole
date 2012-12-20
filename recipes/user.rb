@@ -32,7 +32,7 @@ group g do
   members [u]
   system true
   action :create
-  only_if {u != g}
+  only_if { u != g }
 end
 
 # vim: ai et ts=2 sts=2 sw=2 ft=ruby fdm=marker

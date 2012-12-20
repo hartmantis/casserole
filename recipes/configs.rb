@@ -71,6 +71,9 @@ template "#{conf_dir}/cassandra.yaml" do
   notifies :restart, "service[#{node["cassandra"]["name"]}]"
 end
 
+my_dc = node["cassandra"]["datacenter"]
+my_dc || my_dc = node["cassandra"]["default_datacenter"]
+my_rack = node["cassandra"]["rack"] || node["cassandra"]["default_rack"]
 template "#{conf_dir}/cassandra-rackdc.properties" do
   owner cuser
   group cgroup
@@ -78,9 +81,8 @@ template "#{conf_dir}/cassandra-rackdc.properties" do
   source "configs/cassandra-rackdc.properties.erb"
   action :create
   variables(
-    :datacenter => node["cassandra"]["datacenter"] ||
-      node["cassandra"]["default_datacenter"],
-    :rack => node["cassandra"]["rack"] || node["cassandra"]["default_rack"]
+    :datacenter => my_dc,
+    :rack => my_rack
   )
   notifies :restart, "service[#{node["cassandra"]["name"]}]"
 end
@@ -111,10 +113,11 @@ script "alter_cluster_name" do
   only_if do
     require "cassandra-cql"
 
-    db = CassandraCQL::Database.new("127.0.0.1:9160", {:keyspace => "system"})
-    row = "L".each_byte.map {|b| b.to_s(16)}.join
+    db = CassandraCQL::Database.new("127.0.0.1:9160", { :keyspace => "system" })
+    row = "L".each_byte.map { |b| b.to_s(16) }.join
     colfam = "LocationInfo"
-    name = db.execute("SELECT * FROM #{colfam} WHERE KEY = '#{row}'").fetch["ClusterName"]
+    name = db.execute("SELECT * FROM #{colfam} WHERE KEY = '#{row}'").
+      fetch["ClusterName"]
     name != node["cassandra"]["cluster_name"]
   end
 end

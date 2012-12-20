@@ -47,12 +47,12 @@ default["cassandra"]["home_dir"] = "/usr/share/cassandra"
 default["cassandra"]["pid_file"] = "/var/run/cassandra/cassandra.pid"
 default["cassandra"]["extra_services"] = ["opscenterd"]
 default["cassandra"]["packages"] = {
-  "python-cql" => {"version" => "1.0.10-1"},
-  "dsc1.1" => {"version" => "1.1.6-1"},
-  "opscenter-free" => {"version" => "2.1.2-1"}
+  "python-cql" => { "version" => "1.0.10-1" },
+  "dsc1.1" => { "version" => "1.1.6-1" },
+  "opscenter-free" => { "version" => "2.1.2-1" }
 }
 default["cassandra"]["chef_gems"] = {
-  "cassandra-cql" => {"version" => "1.1.4"}
+  "cassandra-cql" => { "version" => "1.1.4" }
 }
 
 case node["platform_family"]

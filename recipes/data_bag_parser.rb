@@ -25,9 +25,11 @@ cluster_conf = data_bag_item(node["cassandra"]["data_bag"],
 node.default["cassandra"]["cluster_nodes"] = cluster_conf["nodes"]
 
 # Extract the information about the node from the cluster
-node_conf = cluster_conf["nodes"][node["cassandra"]["node_id"]] or
+node_conf = cluster_conf["nodes"][node["cassandra"]["node_id"]]
+if !node_conf
   raise Chef::Exceptions::ConfigurationError,
-  "Node was not defined in the cluster config"
+    "Node was not defined in the cluster config"
+end
 
 # Allow data bag entries to take precedence over default attributes
 %w{listen_address broadcast_address datacenter rack}.each do |a|
@@ -38,11 +40,12 @@ end
 end
 
 # Determine the seed nodes, sorted so the list is the same across the cluster
-node.default["cassandra"]["seed_list"] = cluster_conf["nodes"].collect do |k,v|
+node.default["cassandra"]["seed_list"] = cluster_conf["nodes"].collect do |k, v|
   v["broadcast_address"] if v["seed"]
 end.compact.sort
-node["cassandra"]["seed_list"].empty? and
+if node["cassandra"]["seed_list"].empty?
   raise Chef::Exceptions::ConfigurationError, "Seed list cannot be empty"
+end
 
 # Check if an initial_token was provided in the data bag
 if node_conf["initial_token"]

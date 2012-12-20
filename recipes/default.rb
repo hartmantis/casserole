@@ -29,11 +29,11 @@ if node["cassandra"]["clustered"] and !node["cassandra"]["initial_token"]
 end
 include_recipe "#{@cookbook_name}::configs"
 
-([node["cassandra"]["name"]] + node["cassandra"]["extra_services"]).each do |s| 
+([node["cassandra"]["name"]] + node["cassandra"]["extra_services"]).each do |s|
   service s do
     supports :restart => true, :status => true
     action [:enable, :start]
-  end 
+  end
 end
 
 file "#{node["cassandra"]["home_dir"]}/chef_install.log" do

@@ -55,7 +55,7 @@ describe "casserole::data_bag_parser" do
 #      chef_run.node["cassandra"]["cluster_nodes"].should == @bag["nodes"]
 #    end
 
-    {
+    attrs = {
       "listen_address" => "1.2.3.4",
       "broadcast_address" => "192.168.201.2",
       "datacenter" => "dc1",
@@ -63,7 +63,8 @@ describe "casserole::data_bag_parser" do
       "endpoint_snitch" => "flavius",
       "seed_list" => ["192.168.201.2", "192.168.202.2"],
       "initial_token" => "wang"
-    }.each do |attr, val|
+    }
+    attrs.each do |attr, val|
       it "sets the #{attr} Cassandra attribute" do
         chef_run.node["cassandra"][attr].should == val
       end
