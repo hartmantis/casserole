@@ -27,7 +27,7 @@ build_solo_rb() {
 }
 
 build_dna_json() {
-    echo "{\"run_list\":[\"recipe[minitest-handler]\"" > /tmp/dna.json
+    echo "{\"run_list\":[\"recipe[minitest-handler]\"," > /tmp/dna.json
     echo "\"recipe[casserole]\"]," >> /tmp/dna.json
     echo "\"cassandra\":{" >> /tmp/dna.json
     echo "    \"clustered\":true," >> /tmp/dna.json
