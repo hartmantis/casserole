@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/RoboticCheese/casserole.png)](https://travis-ci.org/RoboticCheese/casserole)
+[![Build Status](https://travis-ci.org/RoboticCheese/casserole.png?branch=master)](https://travis-ci.org/RoboticCheese/casserole)
 
 Description
 ===========
