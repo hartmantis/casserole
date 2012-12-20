@@ -58,7 +58,7 @@ describe "casserole::repos" do
     end
 
     it "should raise an exception for unsupported platforms" do
-      expect {chef_run.converge @rcp}.to raise_error(
+      expect { chef_run.converge @rcp }.to raise_error(
         Chef::Exceptions::UnsupportedAction,
         "Cookbook does not support Windows XP platform")
     end
