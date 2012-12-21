@@ -5,7 +5,7 @@
 #
 
 install_chef() {
-    gem install chef
+    gem install chef -v $CHEF_VERSION
 }
 
 build_solo_rb() {
