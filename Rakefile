@@ -39,13 +39,12 @@ task :converge do
   $?.exitstatus == 0 or fail "Convergence failed!"
   puts %x{sudo ./test/converge.sh #{ENV["CHEF_VERSION"]}}
   $?.exitstatus == 0 or fail "Convergence failed!"
-  puts "dpkg --list..."
-  puts %x{sudo dpkg --list}
-  puts "dpkg --list | grep -i cassandra"
-  puts %x{sudo dpkg --list | grep -i cassandra}
+  puts "dpkg search..."
+  puts %x{dpkg --search /etc/cassandra}
+  puts %x{dpkg --search /etc/init.d/cassandra}
   %x{sudo rm -f /etc/security/limits.d/cassandra.conf}
   %x{sudo rm -f /etc/init.d/cassandra}
-  %x{sudo rm -rf /usr/share/cassandra /var/lib/cassandra}
+  %x{sudo rm -rf /usr/share/cassandra /var/lib/cassandra /etc/cassandra}
   puts %x{sudo chef-solo -l debug -c /tmp/solo.rb -j /tmp/dna.json}
   $?.exitstatus == 0 or fail "Convergence failed!"
 end
