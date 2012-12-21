@@ -31,4 +31,12 @@ task :chefspec do
   $?.exitstatus == 0 or fail "ChefSpec unit tests failed!"
 end
 
+desc "Run a full converge test"
+task :converge do
+  puts "Running Convergence tests..."
+  %x{echo "cookbook 'minitest-handler'" >> Berksfile}
+  puts %x{bundle exec berks install --path /tmp/berkshelf}
+  $?.exitstatus == 0 or fail "Convergence failed!"
+end
+
 # vim: ai et ts=2 sts=2 sw=2 ft=ruby fdm=marker
