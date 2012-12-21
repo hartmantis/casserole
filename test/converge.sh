@@ -23,8 +23,17 @@ build_solo_rb() {
 }
 
 build_dna_json() {
-    echo "{\"run_list\":[\"recipe[minitest-handler]\"," > /tmp/dna.json
-    echo "\"recipe[casserole]\"]," >> /tmp/dna.json
+    echo "{\"run_list\":[" > /tmp/dna.json
+    echo "\"recipe[minitest-handler]\"," >> /tmp/dna.json
+    echo "\"recipe[casserole::default]\"," >> /tmp/dna.json
+    echo "\"recipe[casserole::user]\"," >> /tmp/dna.json
+    echo "\"recipe[casserole::repos]\"," >> /tmp/dna.json
+    echo "\"recipe[casserole::packages]\"," >> /tmp/dna.json
+    echo "\"recipe[casserole::data_bag_parser]\"," >> /tmp/dna.json
+    echo "\"recipe[casserole::data_bag_parser]\"," >> /tmp/dna.json
+    echo "\"recipe[casserole::token_generator]\"," >> /tmp/dna.json
+    echo "\"recipe[casserole::configs]\"" >> /tmp/dna.json
+    echo "]," >> /tmp/dna.json
     echo "\"cassandra\":{" >> /tmp/dna.json
     echo "    \"clustered\":true," >> /tmp/dna.json
     echo "    \"data_bag\":\"cassandra_clusters\"," >> /tmp/dna.json
