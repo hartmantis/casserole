@@ -34,13 +34,11 @@ build_dna_json() {
 
 resolve_deps() {
     echo "cookbook \"minitest-handler\"" >> Berksfile
-    berks=`ruby -e "require 'berkshelf'; puts Gem.bin_path('berkshelf', 'berks')"`
-    echo "Using berks path $berks..."
-    $berks install --path /tmp/berkshelf
+    bundle exec install --path /tmp/berkshelf
 }
 
 build_solo_rb
 build_dna_json
-#resolve_deps
+resolve_deps
 
 chef-solo -l debug -c /tmp/solo.rb -j /tmp/dna.json
