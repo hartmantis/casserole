@@ -38,6 +38,10 @@ task :converge do
   puts %x{bundle exec berks install --path /tmp/berkshelf}
   $?.exitstatus == 0 or fail "Convergence failed!"
   puts %x{sudo ./test/converge.sh #{ENV["CHEF_VERSION"]}}
+  $?.exitstatus == 0 or fail "Convergence failed!"
+  %x{rm -f /etc/security/limits.d/cassandra.conf}
+  puts %x{sudo chef-solo -l debug -c /tmp/solo.rb -j /tmp/dna.json}
+  $?.exitstatus == 0 or fail "Convergence failed!"
 end
 
 # vim: ai et ts=2 sts=2 sw=2 ft=ruby fdm=marker
