@@ -11,7 +11,7 @@ install_chef() {
 build_solo_rb() {
     echo "file_cache_path \"/tmp\"" > /tmp/solo.rb
     p1=`dirname \`pwd\``
-    p2=/tmp/.berkshelf/cookbooks
+    p2=/tmp/berkshelf
     echo "cookbook_path [\"$p1\", \"$p2\"]" >> /tmp/solo.rb
     echo "role_path nil" >> /tmp/solo.rb
     echo "log_level :info" >> /tmp/solo.rb
@@ -36,9 +36,8 @@ build_dna_json() {
 }
 
 resolve_deps() {
-    export BERKSHELF_PATH=/tmp/.berkshelf
     echo "cookbook \"minitest-handler\"" >> Berksfile
-    berks install
+    berks install --path /tmp/berkshelf
 }
 
 install_chef
