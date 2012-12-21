@@ -163,3 +163,7 @@ being able to run Test Kitchen on Vagrant.
     192.168.201.3   dc1         rack1       Up     Normal  20.39 KB        3.81%               64162880367564825393354959677131675083
     192.168.201.5   dc2         rack1       Up     Normal  20.39 KB        35.92%              125272177062940846191566045318489454887
     192.168.201.4   dc2         rack1       Up     Normal  20.39 KB        21.30%              161518014361785232698955613784408936953
+
+* Need to template out `/etc/opscenter/opscenterd.conf`, bind address and possibly other stuff for Opscenter
+* Firewall rules!
+* Can the initial GUI setup of the Opscenter interface be automated?
