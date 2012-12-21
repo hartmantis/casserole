@@ -37,6 +37,7 @@ task :converge do
   %x{echo "cookbook 'minitest-handler'" >> Berksfile}
   puts %x{bundle exec berks install --path /tmp/berkshelf}
   $?.exitstatus == 0 or fail "Convergence failed!"
+  puts %x{sudo ./test/converge.sh #{ENV["CHEF_VERSION"]}}
 end
 
 # vim: ai et ts=2 sts=2 sw=2 ft=ruby fdm=marker

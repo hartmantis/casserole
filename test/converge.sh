@@ -37,6 +37,7 @@ resolve_deps() {
     bundle exec berks install --path /tmp/berkshelf
 }
 
+gem install chef -v $1
 build_solo_rb
 build_dna_json
 #resolve_deps
