@@ -39,7 +39,6 @@ task :converge do
   $?.exitstatus == 0 or fail "Convergence failed!"
   puts %x{sudo ./test/converge.sh #{ENV["CHEF_VERSION"]}}
   $?.exitstatus == 0 or fail "Convergence failed!"
-  puts "dpkg search..."
   # Travis nodes come with Cassandra files in place
   %x{sudo rm -f /etc/security/limits.d/cassandra.conf}
   %x{sudo rm -f /etc/init.d/cassandra}
