@@ -11,7 +11,7 @@ install_chef() {
 build_solo_rb() {
     echo "file_cache_path \"/tmp\"" > /tmp/solo.rb
     p1=`dirname \`pwd\``
-    p2=/tmp/.berkshelf
+    p2=/tmp/.berkshelf/cookbooks
     echo "cookbook_path [\"$p1\", \"$p2\"]" >> /tmp/solo.rb
     echo "role_path nil" >> /tmp/solo.rb
     echo "log_level :info" >> /tmp/solo.rb
