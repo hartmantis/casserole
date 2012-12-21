@@ -34,8 +34,9 @@ build_dna_json() {
 
 resolve_deps() {
     echo "cookbook \"minitest-handler\"" >> Berksfile
-    echo "Using GEMPATH: $GEM_PATH for berks install..."
-    $GEM_PATH/bin/berks install --path /tmp/berkshelf
+    rvm info environment
+    gem_home=`rvm info environment | grep GEM_HOME | cut -d "\"" -f 2`
+    $gem_home/bin/berks install --path /tmp/berkshelf
 }
 
 build_solo_rb
