@@ -32,7 +32,7 @@ build_dna_json() {
     echo "\"cassandra\":{" >> /tmp/dna.json
     echo "    \"clustered\":true," >> /tmp/dna.json
     echo "    \"data_bag\":\"cassandra_clusters\"," >> /tmp/dna.json
-    echo "    \"cluster_name\":\"cluster1\"" >> /tmp/dna.json
+    echo "    \"cluster_name\":\"cluster1\"," >> /tmp/dna.json
     echo "    \"node_id\":\"cassandra1.dc1.example.com\"}}" >> /tmp/dna.json
 }
 
