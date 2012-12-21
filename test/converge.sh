@@ -37,6 +37,8 @@ resolve_deps() {
     bundle exec berks install --path /tmp/berkshelf
 }
 
+gem install bundler
+
 build_solo_rb
 build_dna_json
 resolve_deps

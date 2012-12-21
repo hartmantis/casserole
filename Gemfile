@@ -11,6 +11,5 @@ gem "chefspec"
 gem "rspec"
 gem "minitest-chef-handler"
 gem "berkshelf"
-gem "bundler"
 
 # vim: ai et ts=2 sts=2 sw=2 ft=ruby fdm=marker
