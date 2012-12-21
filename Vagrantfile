@@ -13,6 +13,7 @@ Vagrant::Config.run do |config|
     centos.vm.host_name = "cassandra1.dc1.example.com"
     centos.vm.network :hostonly, "192.168.201.2"
     centos.vm.provision :chef_solo do |chef|
+      chef.log_level = :debug
       chef.add_recipe "casserole"
       chef.json = {
         :cassandra => {

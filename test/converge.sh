@@ -4,10 +4,6 @@
 # and do a run with Minitest-Chef-Handler
 #
 
-install_chef() {
-    gem install chef -v $CHEF_VERSION
-}
-
 build_solo_rb() {
     echo "file_cache_path \"/tmp\"" > /tmp/solo.rb
     p1=`dirname \`pwd\``
@@ -41,7 +37,6 @@ resolve_deps() {
     berks install --path /tmp/berkshelf
 }
 
-install_chef
 build_solo_rb
 build_dna_json
 resolve_deps

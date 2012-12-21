@@ -2,7 +2,7 @@
 
 source :rubygems
 
-gem "chef", ">= 10.14.4"
+gem "chef", ENV.fetch("CHEF_VERSION", ">= 10.14.4")
 gem "test-kitchen"
 gem "rake"
 gem "tailor"
