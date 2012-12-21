@@ -46,4 +46,4 @@ build_solo_rb
 build_dna_json
 resolve_deps
 
-chef-solo -c /tmp/solo.rb -j /tmp/dna.json
+chef-solo -l debug -c /tmp/solo.rb -j /tmp/dna.json
