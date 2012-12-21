@@ -167,3 +167,4 @@ being able to run Test Kitchen on Vagrant.
 * Need to template out `/etc/opscenter/opscenterd.conf`, bind address and possibly other stuff for Opscenter
 * Firewall rules!
 * Can the initial GUI setup of the Opscenter interface be automated?
+* rpc\_address in cassandra.yaml

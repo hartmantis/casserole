@@ -34,11 +34,11 @@ build_dna_json() {
 
 resolve_deps() {
     echo "cookbook \"minitest-handler\"" >> Berksfile
-    bundle exec install --path /tmp/berkshelf
+    bundle exec berks install --path /tmp/berkshelf
 }
 
 build_solo_rb
 build_dna_json
 resolve_deps
 
-chef-solo -l debug -c /tmp/solo.rb -j /tmp/dna.json
+bundle exec chef-solo -l debug -c /tmp/solo.rb -j /tmp/dna.json
