@@ -10,6 +10,8 @@ env:
 #  - CHEF_VERSION=10.14.4
   - CHEF_VERSION=10.16.2
 
+before_install: "gem install berkshelf; echo 'cookbook \"minitest-handler\"' >> Berksfile; berks install --path /tmp/berkshelf"
+
 script: "bundle exec rake; sudo ./test/converge.sh"
 
 # vim: ai et ts=2 sts=2 sw=2 ft=ruby fdm=marker

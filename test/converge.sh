@@ -41,6 +41,6 @@ resolve_deps() {
 
 build_solo_rb
 build_dna_json
-resolve_deps
+#resolve_deps
 
 chef-solo -l debug -c /tmp/solo.rb -j /tmp/dna.json
