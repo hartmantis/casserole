@@ -34,7 +34,8 @@ build_dna_json() {
 
 resolve_deps() {
     echo "cookbook \"minitest-handler\"" >> Berksfile
-    berks install --path /tmp/berkshelf
+    echo "Using GEMPATH: $GEM_PATH for berks install..."
+    $GEM_PATH/bin/berks install --path /tmp/berkshelf
 }
 
 build_solo_rb
