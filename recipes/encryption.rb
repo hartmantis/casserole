@@ -31,9 +31,10 @@ truststore = File.expand_path(
 truststore_password =
   node["cassandra"]["encryption_options"]["truststore_password"]
 
-%w{all dc rack}.include?(internode_encryption) or
+if !%w{all dc rack}.include?(internode_encryption)
   raise Chef::Exceptions::ConfigurationError,
-  "Unsupported encryption scheme: #{internode_encryption}"
+    "Unsupported encryption scheme: #{internode_encryption}"
+end
 
 [File.dirname(keystore), File.dirname(truststore)].uniq.each do |d|
   directory d do

@@ -8,7 +8,7 @@ rvm:
 
 env:
 #  - CHEF_VERSION=10.14.4
-  - CHEF_VERSION=10.16.2
+  - CHEF_VERSION=10.16.4
 
 script: "bundle exec rake; bundle exec rake converge"
 
