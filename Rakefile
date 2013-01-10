@@ -41,21 +41,10 @@ task :converge do
   $?.exitstatus == 0 or fail "Convergence failed!"
   # Travis nodes come with Cassandra files in place
   %x{sudo rm -f /etc/security/limits.d/cassandra.conf}
-  %x{sudo rm -f /etc/init.d/cassandra}
+  %x{sudo rm -f /etc/init.d/cassandra /usr/local/bin/cassandra}
   %x{sudo rm -rf /usr/share/cassandra /var/lib/cassandra /etc/cassandra}
   puts %x{sudo chef-solo -c /tmp/solo.rb -j /tmp/dna.json}
-  ret = $?
-
-  puts "Cassandra init contents:"
-  puts %x{cat /etc/init.d/cassandra}
-  puts "which cassandra:"
-  puts %x{which cassandra}
-  puts "which -a cassandra:"
-  puts %x{which -a cassandra}
-  puts "Cassandra script contents:"
-  puts %x{cat `which cassandra`}
-
-  ret.exitstatus == 0 or fail "Convergence failed!"
+  $?.exitstatus == 0 or fail "Convergence failed!"
 end
 
 # vim: ai et ts=2 sts=2 sw=2 ft=ruby fdm=marker
