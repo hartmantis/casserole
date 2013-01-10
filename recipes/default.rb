@@ -24,6 +24,9 @@ include_recipe "#{@cookbook_name}::packages"
 if node["cassandra"]["clustered"] and node["cassandra"]["data_bag"]
   include_recipe "#{@cookbook_name}::data_bag_parser"
 end
+if node["cassandra"]["encryption_options"]["internode_encryption"] != "none"
+  include_recipe "#{@cookbook_name}::encryption"
+end
 if node["cassandra"]["clustered"] and !node["cassandra"]["initial_token"]
   include_recipe "#{@cookbook_name}::token_generator"
 end

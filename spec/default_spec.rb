@@ -10,7 +10,6 @@ describe "casserole::default" do
       casserole::user
       casserole::repos
       casserole::packages
-      casserole::data_bag_parser
       casserole::token_generator
       casserole::configs
     }.each do |r|
@@ -21,8 +20,9 @@ describe "casserole::default" do
 
   it "should install Oracle Java" do
     chef_run.converge @rcp
-    chef_run.node.java.install_flavor.should == "oracle"
-    chef_run.node.java.oracle.accept_oracle_download_terms.should == true
+    chef_run.node["java"]["install_flavor"].should == "oracle"
+    chef_run.node["java"]["oracle"]["accept_oracle_download_terms"].
+      should == true
     chef_run.should include_recipe "java"
   end
 
@@ -36,19 +36,32 @@ describe "casserole::default" do
     }.each do |r|
       chef_run.should include_recipe r
     end
+    chef_run.should_not include_recipe "casserole::data_bag_parser"
+    chef_run.should_not include_recipe "casserole::encryption"
   end
 
   it "should include the data bag recipe if it's a clustered, bagged node" do
     chef_run.node.set["cassandra"]["clustered"] = true
     chef_run.node.set["cassandra"]["data_bag"] = "some_bag"
+    chef_run.node.run_state.seen_recipes["casserole::data_bag_parser"] = true
     chef_run.converge @rcp
     chef_run.should include_recipe "casserole::data_bag_parser"
   end
 
   it "should call the token generator recipe if clustered with no token" do
     chef_run.node.set["cassandra"]["clustered"] = true
+    chef_run.node.run_state.seen_recipes["casserole::token_generator"] = true
     chef_run.converge @rcp
     chef_run.should include_recipe "casserole::token_generator"
+  end
+
+  it "should call the encryption recipe if set for Thrift over SSL" do
+    chef_run.node.set["cassandra"]["encryption_options"] = {
+      "internode_encryption" => "all"
+    }
+    chef_run.node.run_state.seen_recipes["casserole::encryption"] = true
+    chef_run.converge @rcp
+    chef_run.should include_recipe "casserole::encryption"
   end
 
   it "should enable and start the relevant services" do

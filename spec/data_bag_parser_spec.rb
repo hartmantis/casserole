@@ -42,18 +42,25 @@ describe "casserole::data_bag_parser" do
             "initial_token" => "tang"
           }
         },
-        "endpoint_snitch" => "flavius"
+        "endpoint_snitch" => "flavius",
+        "encryption_options" => {
+          "internode_encryption" => "some",
+          "key" => "gibberish",
+          "keystore" => "/hi/there.keystore",
+          "keystore_password" => "secure",
+          "crt" => "moregibberish",
+          "truststore" => "/hi/there.truststore",
+          "truststore_password" => "supersecure",
+          "protocol" => "1",
+          "algorithm" => "AlGoreRhythm",
+          "store_type" => "SKJ",
+          "cipher_suites" => %w{monkeys pants}
+        }
       }
       Chef::Recipe.any_instance.should_receive(:data_bag_item).
         with("clusterfarks", "dragons").and_return(@bag)
       chef_run.converge @rcp
     end
-
-# Bug in ChefSpec(?) fails trying to cast the nodes hash as an array
-#    it "sets the cluster_nodes attribute" do
-#      puts @bag["nodes"]
-#      chef_run.node["cassandra"]["cluster_nodes"].should == @bag["nodes"]
-#    end
 
     attrs = {
       "listen_address" => "1.2.3.4",
@@ -67,6 +74,20 @@ describe "casserole::data_bag_parser" do
     attrs.each do |attr, val|
       it "sets the #{attr} Cassandra attribute" do
         chef_run.node["cassandra"][attr].should == val
+      end
+    end
+
+    it "sets the cluster_nodes attributes" do
+      @bag["nodes"].each do |node, attrs|
+        attrs.each do |k, v|
+          chef_run.node["cassandra"]["cluster_nodes"][node][k].should == v
+        end
+      end
+    end
+
+    it "sets the encryption_options attributes" do
+      @bag["encryption_options"].each do |k, v|
+        chef_run.node["cassandra"]["encryption_options"][k].should == v
       end
     end
   end

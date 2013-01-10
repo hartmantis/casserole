@@ -47,6 +47,11 @@ if node["cassandra"]["seed_list"].empty?
   raise Chef::Exceptions::ConfigurationError, "Seed list cannot be empty"
 end
 
+# Check for any encryption option overrides
+cluster_conf["encryption_options"].each do |k, v|
+  node.default["cassandra"]["encryption_options"][k] = v
+end
+
 # Check if an initial_token was provided in the data bag
 if node_conf["initial_token"]
   node.default["cassandra"]["initial_token"] = node_conf["initial_token"]

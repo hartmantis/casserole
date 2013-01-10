@@ -2,11 +2,18 @@
 # # vi: set ft=ruby :
 
 cookbook "casserole" do
+    # Normal default recipes
     configuration "default"
     configuration "user"
     configuration "repos"
     configuration "packages"
     configuration "configs"
+
+    # Optional configurations
+#    configuration "data_bag_parser"
+
+
+#    configuration "encrypted_replication"
 
     # Fail immediately on a Foodcritic check and call ChefSpec before
     # spending the time to spawn test servers

@@ -61,12 +61,16 @@ template "#{conf_dir}/cassandra.yaml" do
   source "configs/cassandra.yaml.erb"
   action :create
   variables(
+    :conf_dir => conf_dir,
     :cluster_name => node["cassandra"]["cluster_name"],
+    :storage_port => node["cassandra"]["storage_port"],
+    :ssl_storage_port => node["cassandra"]["ssl_storage_port"],
     :listen_address => node["cassandra"]["listen_address"],
     :seeds => node["cassandra"]["seed_list"] || ["127.0.0.1"],
     :initial_token => node["cassandra"]["initial_token"],
     :broadcast_address => node["cassandra"]["broadcast_address"] || "",
-    :endpoint_snitch => node["cassandra"]["endpoint_snitch"]
+    :endpoint_snitch => node["cassandra"]["endpoint_snitch"],
+    :encryption_options => node["cassandra"]["encryption_options"]
   )
   notifies :restart, "service[#{node["cassandra"]["name"]}]"
 end

@@ -60,9 +60,16 @@ describe "casserole::configs" do
         "cluster_name: 'Casserole Cluster'",
         "initial_token: \n",
         "- seeds: \"127.0.0.1\"",
+        "storage_port: 7000\n",
+        "ssl_storage_port: 7001\n",
         "listen_address: 1.2.3.4",
         "broadcast_address: \n",
-        "endpoint_snitch: SimpleSnitch"
+        "endpoint_snitch: SimpleSnitch",
+        "internode_encryption: none\n",
+        "keystore: /etc/cassandra/conf/.keystore\n",
+        "keystore_password: cassandra\n",
+        "truststore: /etc/cassandra/conf/.truststore\n",
+        "truststore_password: cassandra\n"
       ]
       strs.each do |c|
         chef_run.should create_file_with_content(f, c)
@@ -177,6 +184,36 @@ describe "casserole::configs" do
       chef_run.should create_file_with_content(f, content)
       chef_run.template(f).should be_owned_by(@user, @group)
       chef_run.template(f).should notify("service[cassandra]", :restart)
+    end
+  end
+
+  context "a node with overridden encryption options" do
+    before(:each) do
+      @f = "/etc/cassandra/conf/cassandra.yaml"
+      @enc = {
+        "internode_encryption" => "aardvark",
+        "keystore" => "/alli/gator",
+        "keystore_password" => "anaconda",
+        "truststore" => "/ant/elope",
+        "truststore_password" => "angelfish",
+        "protocol" => "ape",
+        "algorithm" => "armadillo",
+        "store_type" => "ass",
+        "cipher_suites" => %w{auk auklet}
+      }
+      chef_run.node.set["cassandra"]["encryption_options"] = @enc
+      chef_run.converge @rcp
+    end
+
+    it "should set overridden encryption options in cassandra.yaml" do
+      @enc.each do |k, v|
+        unless k == "cipher_suites"
+          chef_run.should create_file_with_content(@f, "#{k}: #{v}\n")
+        else
+          chef_run.should create_file_with_content(@f,
+            "#{k}: [#{v.join(",")}]\n")
+        end
+      end
     end
   end
 end

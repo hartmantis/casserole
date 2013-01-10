@@ -51,6 +51,16 @@ attributes if a data bag name is set.
 
 The unique name the node is identified by in the cluster's data bag item
 
+    default["cassandra"]["encryption_options"]["internode_encryption"] = "none"
+    default["cassandra"]["encryption_options"]["key"] = nil 
+    default["cassandra"]["encryption_options"]["keystore"] = ".keystore"
+    default["cassandra"]["encryption_options"]["keystore_password"] = "cassandra"
+    default["cassandra"]["encryption_options"]["crt"] = nil 
+    default["cassandra"]["encryption_options"]["truststore"] = ".truststore"
+    default["cassandra"]["encryption_options"]["truststore_password"] = "cassandra"
+
+Options for enabling SSL encryption of the Thrift traffic between nodes/datacenters
+
     default["cassandra"]["listen_address"] = node["ipaddress"]
 
 The IP address for the node to listen on
@@ -140,7 +150,6 @@ preflight override isn't needed?
 * What happens to the tokens and distribution if a current cluster needs a node
 added?
 * Authentication support for Cassandra
-* SSL support for Gossip traffic
 * Authentication support for the Opscenter web UI
 * Support for IPv6
 * Is restarting Cassandra on template changes really acceptable?
@@ -168,3 +177,9 @@ being able to run Test Kitchen on Vagrant.
 * Firewall rules!
 * Can the initial GUI setup of the Opscenter interface be automated?
 * rpc\_address in cassandra.yaml
+* Add support for individual encryption keys instead of one shared one
+* Support both passworded *and* non-passworded key files
+* Migrate JNA install to `java` community cookbook
+* Migrate encryption keystore operations to `java` or a wrapper cookbook for it
+* Refactor some of the RSpec tests to use contexts more
+* Minitest tests for clustering (data bags + tokens) and encryption

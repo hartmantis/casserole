@@ -54,6 +54,26 @@ default["cassandra"]["packages"] = {
 default["cassandra"]["chef_gems"] = {
   "cassandra-cql" => { "version" => "1.1.4" }
 }
+default["cassandra"]["storage_port"] = 7000
+default["cassandra"]["ssl_storage_port"] = 7001
+
+# Encryption options
+default["cassandra"]["encryption_options"]["internode_encryption"] = "none"
+default["cassandra"]["encryption_options"]["key"] = nil
+default["cassandra"]["encryption_options"]["keystore"] = ".keystore"
+default["cassandra"]["encryption_options"]["keystore_password"] = "cassandra"
+default["cassandra"]["encryption_options"]["crt"] = nil
+default["cassandra"]["encryption_options"]["truststore"] = ".truststore"
+default["cassandra"]["encryption_options"]["truststore_password"] = "cassandra"
+
+# Advanced encryption options
+default["cassandra"]["encryption_options"]["protocol"] = "TLS"
+default["cassandra"]["encryption_options"]["algorithm"] = "SunX509"
+default["cassandra"]["encryption_options"]["store_type"] = "JKS"
+default["cassandra"]["encryption_options"]["cipher_suites"] = %w{
+  TLS_RSA_WITH_AES_128_CBC_SHA
+  TLS_RSA_WITH_AES_256_CBC_SHA
+}
 
 case node["platform_family"]
 when "rhel"
